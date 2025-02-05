@@ -1,0 +1,71 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * Hardkernel Odroid HC1 board device tree source
+ *
+ * Copyright (c) 2017 Marek Szyprowski
+ * Copyright (c) 2017 Samsung Electronics Co., Ltd.
+ *		http://www.samsung.com
+ */
+
+/dts-v1/;
+#include "exynos5422-odroid-core.dtsi"
+
+/ {
+	model = "Hardkernel Odroid HC1";
+	compatible = "hardkernel,odroid-hc1", "samsung,exynos5800", \
+		     "samsung,exynos5";
+
+	pwmleds {
+		compatible = "pwm-leds";
+
+		blueled {
+			label = "blue:heartbeat";
+			pwms = <&pwm 2 2000000 0>;
+			pwm-names = "pwm2";
+			max_brightness = <255>;
+			linux,default-trigger = "heartbeat";
+		};
+	};
+
+	thermal-zones {
+		cpu0_thermal: cpu0-thermal {
+			thermal-sensors = <&tmu_cpu0 0>;
+			#define CPU_THERMAL_ZONE_NUM 0
+			#include "exynos5422-odroidhc1-trip-points.dtsi"
+			#undef CPU_THERMAL_ZONE_NUM
+		};
+		cpu1_thermal: cpu1-thermal {
+			thermal-sensors = <&tmu_cpu1 0>;
+			#define CPU_THERMAL_ZONE_NUM 1
+			#include "exynos5422-odroidhc1-trip-points.dtsi"
+			#undef CPU_THERMAL_ZONE_NUM
+		};
+		cpu2_thermal: cpu2-thermal {
+			thermal-sensors = <&tmu_cpu2 0>;
+			#define CPU_THERMAL_ZONE_NUM 2
+			#include "exynos5422-odroidhc1-trip-points.dtsi"
+			#undef CPU_THERMAL_ZONE_NUM
+		};
+		cpu3_thermal: cpu3-thermal {
+			thermal-sensors = <&tmu_cpu3 0>;
+			#define CPU_THERMAL_ZONE_NUM 3
+			#include "exynos5422-odroidhc1-trip-points.dtsi"
+			#undef CPU_THERMAL_ZONE_NUM
+		};
+	};
+
+};
+
+&pwm {
+	/*
+	 * PWM 2 -- Blue LED
+	 */
+	pinctrl-0 = <&pwm2_out>;
+	pinctrl-names = "default";
+	samsung,pwm-outputs = <2>;
+	status = "okay";
+};
+
+&usbdrd_dwc3_1 {
+	dr_mode = "host";
+};
