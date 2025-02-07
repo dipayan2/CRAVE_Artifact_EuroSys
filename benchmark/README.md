@@ -25,3 +25,36 @@ You can find the detailed instruction for Rodinia [here] (https://github.com/yuh
 Use the appropriate folder for evaluation
 1. For Jetson TX2 use ``` cuda ```
 2. For ODROID XU4 use  ``` opencl ```
+
+
+# Evaluating the governor
+
+We will collect the following data:
+1. Execution time for performance
+2. Power (if your device has internal power monitors)
+
+## Collecting performane
+```
+Open the particular benchmark foler of your choice(for example SSSP), as shown in previous section
+
+cd chai/CUDA-D/SSSP/
+time ./sssp
+
+```
+This will provide the execution time
+
+## Measuring power and energy
+Jetson TX2 has internal power meters, which allows us to measure the power and the energy consumed during the whole process
+
+Step1. Start the `tegrastats` 
+```
+sudo -b tegrastats --interval 100 --logfile <FileName>
+
+```
+Step2. After the end of the benchmark
+
+```
+sudo -b tegrastats --stop
+```
+
+
