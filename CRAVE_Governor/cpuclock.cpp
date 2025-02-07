@@ -149,6 +149,7 @@ double CpuClock::GetUtilization() {
         return -1.0;
     }
     double temp_load = 0.0;
+    double big_load = 0.0;
 
     for(int idx = 0; idx < 6; idx++){
         if (this->cpu_time_[idx] == 0){
@@ -166,13 +167,21 @@ double CpuClock::GetUtilization() {
             this->cpu_time_[idx] = total_time_list[idx];
             this->cpu_idle_[idx] = idle_time_list[idx];
         }
-
-        if (this-> cpu_util_[idx] > temp_load ){
+        if(this-> cpu_util_[idx] > big_load && (idx == 1 || idx == 2)){
+            big_load = this->cpu_util_[idx];
+        }
+        else if (this-> cpu_util_[idx] > temp_load && (idx < 1 || idx > 2)){
             temp_load = this-> cpu_util_[idx];
         }
     }
-
-    this->cpu_load = temp_load;
+    double act_load = 0.0;
+    if(big_load > 20.0){
+        act_load = big_load;
+    }
+    else{
+        act_load = temp_load;
+    }
+    this->cpu_load = act_load;
     return this->cpu_load;
 }
 
